@@ -1,10 +1,20 @@
-Create a data.csv file with columns labelled "top", "left", "right"
-2nd row should contain the labels
+### `data.csv` Format
 
-Example:
-+-----------+------------+-------------+
-|    top    |    left    |    right    |
-+-----------+------------+-------------+
+Create a `data.csv` file with the columns labelled `top`, `left`, and `right`.
+
+The **second row** should contain the labels for each axis. The rows after that contain the corresponding data.
+
+```text
+top,left,right
+Top Label,Left Label,Right Label
+top data,left data,right data
+top data,left data,right data
+```
+
+For example:
+
+| top       | left       | right       |
+| --------- | ---------- | ----------- |
 | Top Label | Left Label | Right Label |
 | top data  | left data  | right data  |
-+-----------+------------+-------------+
+| top data  | left data  | right data  |
