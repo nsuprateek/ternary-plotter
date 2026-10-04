@@ -22,4 +22,4 @@ subprocess.check_call([
 ])
 
 print("Setup complete!")
-input("Press any key to continue...")
+input("Press enter to continue...")

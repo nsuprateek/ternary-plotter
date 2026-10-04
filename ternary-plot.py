@@ -1,11 +1,62 @@
-import matplotlib.pyplot as plt
-import mpltern
-import pandas as pd
 import os
+import sys
+import subprocess
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-df = pd.read_csv("data.csv", header=None)
+# Only create the project environment when no virtual environment exists.
+if sys.prefix == sys.base_prefix:
+    venv_dir = ".venv"
+    if not os.path.exists(venv_dir):
+        print("Dependencies not installed, installing now")
+        subprocess.check_call([sys.executable, "setup.py"])
+
+    if os.name == "nt":  # if windows
+        venv_python = os.path.join(venv_dir, "Scripts", "python.exe")
+    else:
+        venv_python = os.path.join(venv_dir, "bin", "python")
+
+    subprocess.check_call([
+        venv_python,
+        os.path.abspath(__file__),
+        *sys.argv[1:]
+    ])
+    sys.exit()
+# ======== ARGUMENTS ============
+
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-f", "--file",
+    help="Input CSV file",
+    default="data.csv"
+)
+
+parser.add_argument(
+    "-s", "--size",
+    help="Size of points on the plot",
+    type=int,
+    default=30
+)
+
+parser.add_argument(
+    "--no-view",
+    help="Don't show the final plot in a matplotlib viewer",
+    action="store_false",
+    dest="view"
+)
+
+args = parser.parse_args()
+
+# ======== MAIN PROGRAM =========
+
+import matplotlib.pyplot as plt
+import mpltern
+import pandas as pd
+
+df = pd.read_csv(args.file, header=None)
 
 # Get 1st row (i.e. top, left right)
 headers = df.iloc[0]
@@ -34,6 +85,10 @@ ax.set_llabel(labels.iloc[col["left"]])
 ax.set_rlabel(labels.iloc[col["right"]])
 
 ax.grid()
-ax.scatter(top, left, right, s=30)
-plt.savefig('Ternary Graph.png')
-plt.show()
+ax.scatter(top, left, right, s=args.size)
+filename = f"Ternary Plot ({labels.iloc[col['top']]}-{labels.iloc[col['left']]}-{labels.iloc[col['right']]}).png"
+plt.savefig(filename)
+print(f"Created {filename}")
+
+if args.view:
+    plt.show()
