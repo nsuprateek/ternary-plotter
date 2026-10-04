@@ -3,6 +3,8 @@ import platform
 import subprocess
 import sys
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 venv = ".venv"
 
 # Create virtual environment
@@ -20,3 +22,4 @@ subprocess.check_call([
 ])
 
 print("Setup complete!")
+input("Press any key to continue...")

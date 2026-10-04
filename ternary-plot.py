@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import mpltern
 import pandas as pd
+import os
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 df = pd.read_csv("data.csv", header=None)
 
