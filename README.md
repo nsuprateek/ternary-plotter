@@ -1,6 +1,6 @@
 ### `data.csv` Format
 
-Create a `data.csv` file with the columns labelled `top`, `left`, and `right`.
+Create a `data.csv` file in the current folder with the columns labelled `top`, `left`, and `right`.
 
 The **second row** should contain the labels for each axis. The rows after that contain the corresponding data.
 
