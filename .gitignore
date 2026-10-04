@@ -1,0 +1,6 @@
+*
+!.gitignore
+!ternary-plot.py
+!setup.py
+!requirements.txt
+!README.md
