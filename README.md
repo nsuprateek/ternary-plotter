@@ -1,3 +1,5 @@
+Create a ternary scatter plot.
+
 ### `data.csv` Format
 
 Create a `data.csv` file in the current folder with the columns labelled `top`, `left`, and `right`.
@@ -18,3 +20,10 @@ For example:
 | Top Label | Left Label | Right Label |
 | top data  | left data  | right data  |
 | top data  | left data  | right data  |
+
+### CLI Arguments
+
+`-f`, `--file` : Specify file path. Defaults to `data.csv`.
+`-s`, `--size` : Specify size of points on the plot. Defaults to `30`. 
+`--no-show` : Supresses the matplotlib viewer.
+
