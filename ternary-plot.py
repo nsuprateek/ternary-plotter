@@ -35,10 +35,19 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-s", "--size",
+    "-ps", "--point-size",
     help="Size of points on the plot",
     type=int,
-    default=30
+    default=30,
+    dest="point_size"
+)
+
+parser.add_argument(
+    "-ls", "--label-size",
+    help="Size of labels",
+    type=int,
+    default=14,
+    dest="label_size"
 )
 
 parser.add_argument(
@@ -48,6 +57,13 @@ parser.add_argument(
     dest="view"
 )
 
+parser.add_argument(
+    "-g, --show-grid",
+    help="Show grid lines",
+    action="store_true",
+    dest="grid"
+)
+
 args = parser.parse_args()
 
 # ======== MAIN PROGRAM =========
@@ -55,6 +71,7 @@ args = parser.parse_args()
 import matplotlib.pyplot as plt
 import mpltern
 import pandas as pd
+from matplotlib.ticker import MultipleLocator
 
 df = pd.read_csv(args.file, header=None)
 
@@ -65,6 +82,16 @@ col = {name: idx for idx, name in enumerate(headers)}
 
 # Get 2nd row
 labels = df.iloc[1]
+def clean_string(string):
+    return (
+        string
+        .replace('$', '')
+        .replace('{', '')
+        .replace('}', '')
+        .replace('_', '')
+        .replace('^', '')
+    )
+
 # top, left, right = df['top'].values, df['left'].values, df['right'].values
 # top, left, right = df[['top', 'left', 'right']].to_numpy().T
 data = df.iloc[2:]
@@ -73,19 +100,30 @@ data = df.iloc[2:]
 values = data.iloc[:, [col["top"], col["left"], col["right"]]].astype(float)
 
 # Normalise
-values = values.div(values.sum(axis=1), axis=0) * 100 # axis=1 means sum of row
+# ternary_sum auto normalises - this is unnecessary
+# values = values.div(values.sum(axis=1), axis=0) * 100 # axis=1 means sum of row
 
 top = values.iloc[:, 0]
 left = values.iloc[:, 1]
 right = values.iloc[:, 2]
 
 ax = plt.subplot(projection="ternary", ternary_sum=100.0)
-ax.set_tlabel(labels.iloc[col["top"]])
-ax.set_llabel(labels.iloc[col["left"]])
-ax.set_rlabel(labels.iloc[col["right"]])
+ax.set_tlabel(labels.iloc[col["top"]], fontsize=args.label_size)
+ax.set_llabel(labels.iloc[col["left"]], fontsize=args.label_size)
+ax.set_rlabel(labels.iloc[col["right"]], fontsize=args.label_size)
 
-ax.grid()
-ax.scatter(top, left, right, s=args.size)
+ax.grid(args.grid)
+
+ax.tick_params(labelrotation='horizontal')
+
+ax.taxis.set_label_rotation_mode("horizontal")
+ax.laxis.set_label_rotation_mode("horizontal")
+ax.raxis.set_label_rotation_mode("horizontal")
+
+ax.scatter(top, left, right, s=args.point_size)
+
+# Remove mathtext formatting before saving
+labels = labels.map(clean_string)
 filename = f"Ternary Plot ({labels.iloc[col['top']]}-{labels.iloc[col['left']]}-{labels.iloc[col['right']]}).png"
 plt.savefig(filename)
 print(f"Created {filename}")
