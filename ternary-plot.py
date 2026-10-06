@@ -58,7 +58,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-g, --show-grid",
+    "-g", "--show-grid",
     help="Show grid lines",
     action="store_true",
     dest="grid"
@@ -71,7 +71,6 @@ args = parser.parse_args()
 import matplotlib.pyplot as plt
 import mpltern
 import pandas as pd
-from matplotlib.ticker import MultipleLocator
 
 df = pd.read_csv(args.file, header=None)
 
@@ -114,7 +113,8 @@ ax.set_rlabel(labels.iloc[col["right"]], fontsize=args.label_size)
 
 ax.grid(args.grid)
 
-ax.tick_params(labelrotation='horizontal')
+# ax.tick_params(labelrotation='horizontal')
+ax.tick_params(length=0, label1On=False, label2On=False)
 
 ax.taxis.set_label_rotation_mode("horizontal")
 ax.laxis.set_label_rotation_mode("horizontal")
@@ -124,9 +124,17 @@ ax.scatter(top, left, right, s=args.point_size)
 
 # Remove mathtext formatting before saving
 labels = labels.map(clean_string)
-filename = f"Ternary Plot ({labels.iloc[col['top']]}-{labels.iloc[col['left']]}-{labels.iloc[col['right']]}).png"
-plt.savefig(filename)
-print(f"Created {filename}")
+filename = f"{labels.iloc[col['top']]} {labels.iloc[col['left']]} {labels.iloc[col['right']]}.png"
+
+from pathlib import Path
+
+output_dir = Path("Ternary Figures")
+output_dir.mkdir(parents=True, exist_ok=True)
+
+output_path = output_dir / filename
+
+plt.savefig(output_path)
+print(f"Saved {filename} to {output_path}")
 
 if args.view:
     plt.show()
