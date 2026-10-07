@@ -127,12 +127,9 @@ ax.scatter(top, left, right, s=args.point_size)
 labels = labels.map(clean_string)
 filename = f"{labels.iloc[col['top']]} {labels.iloc[col['left']]} {labels.iloc[col['right']]}.png"
 
-from pathlib import Path
-
 output_dir = Path("Ternary Figures")
 output_dir.mkdir(parents=True, exist_ok=True)
-
-output_path = output_dir / filename
+output_path = os.getcwd() / output_dir / filename
 
 plt.savefig(output_path, bbox_inches="tight")
 print(f"Saved {filename} to {output_path}")
