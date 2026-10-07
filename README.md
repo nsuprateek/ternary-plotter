@@ -24,6 +24,11 @@ For example:
 ### CLI Arguments
 
 `-f`, `--file` : Specify file path. Defaults to `data.csv`.
-`-s`, `--size` : Specify size of points on the plot. Defaults to `30`. 
-`--no-show` : Supresses the matplotlib viewer.
 
+`-ps`, `--point-size` : Specify size of points on the plot. Defaults to `30`.
+
+`-ls`, `--label-size` : Specify fontsize of labels. Defaults to `14`.
+
+`--no-view` : Supresses the matplotlib viewer.
+
+`-g`, `--show-grid` : Show gridlines on the plot.
