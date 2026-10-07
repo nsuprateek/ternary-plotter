@@ -1,24 +1,24 @@
-import os
 import platform
 import subprocess
 import sys
+from pathlib import Path
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+script_dir = Path(__file__).parent.resolve()
 
-venv = ".venv"
+venv_dir = script_dir / ".venv"
 
 # Create virtual environment
-subprocess.check_call([sys.executable, "-m", "venv", venv])
+subprocess.check_call([sys.executable, "-m", "venv", str(venv_dir)])
 
 # Find the venv's Python/pip
 if platform.system() == "Windows":
-    python = os.path.join(venv, "Scripts", "python.exe")
+    python = venv_dir / "Scripts" / "python.exe"
 else:
-    python = os.path.join(venv, "bin", "python")
+    python = venv_dir / "bin" / "python"
 
 # Install dependencies
 subprocess.check_call([
-    python, "-m", "pip", "install", "-r", "requirements.txt"
+    str(python), "-m", "pip", "install", "-r", str(script_dir / "requirements.txt")
 ])
 
 print("Setup complete!")

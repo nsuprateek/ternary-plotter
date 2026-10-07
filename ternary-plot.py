@@ -1,24 +1,25 @@
 import os
 import sys
 import subprocess
+from pathlib import Path
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+script_dir = Path(__file__).resolve().parent
 
 # Only create the project environment when no virtual environment exists.
 if sys.prefix == sys.base_prefix:
-    venv_dir = ".venv"
-    if not os.path.exists(venv_dir):
+    venv_dir = script_dir / ".venv"
+    if not venv_dir.exists():
         print("Dependencies not installed, installing now")
-        subprocess.check_call([sys.executable, "setup.py"])
+        subprocess.check_call([sys.executable, str(script_dir / "setup.py")])
 
     if os.name == "nt":  # if windows
-        venv_python = os.path.join(venv_dir, "Scripts", "python.exe")
+        venv_python = venv_dir / "Scripts" / "python.exe"
     else:
-        venv_python = os.path.join(venv_dir, "bin", "python")
+        venv_python = venv_dir / "bin" / "python"
 
     subprocess.check_call([
-        venv_python,
-        os.path.abspath(__file__),
+        str(venv_python),
+        str(__file__),
         *sys.argv[1:]
     ])
     sys.exit()
