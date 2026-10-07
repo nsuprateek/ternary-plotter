@@ -17,11 +17,7 @@ if sys.prefix == sys.base_prefix:
     else:
         venv_python = venv_dir / "bin" / "python"
 
-    subprocess.check_call([
-        str(venv_python),
-        str(__file__),
-        *sys.argv[1:]
-    ])
+    os.execv(str(venv_python), [str(venv_python), str(__file__), *sys.argv[1:]])
     sys.exit()
 # ======== ARGUMENTS ============
 
@@ -73,7 +69,12 @@ import matplotlib.pyplot as plt
 import mpltern
 import pandas as pd
 
-df = pd.read_csv(args.file, header=None)
+try:
+    df = pd.read_csv(args.file, header=None)
+except FileNotFoundError:
+    raise SystemExit(f"File not found: {args.file}")
+except Exception as e:
+    raise SystemExit(f"Error reading CSV file '{args.file}': {e}")
 
 # Get 1st row (i.e. top, left right)
 headers = df.iloc[0]
@@ -96,8 +97,15 @@ def clean_string(string):
 # top, left, right = df[['top', 'left', 'right']].to_numpy().T
 data = df.iloc[2:]
 
-
-values = data.iloc[:, [col["top"], col["left"], col["right"]]].astype(float)
+try:
+    values = data.iloc[:, [col["top"], col["left"], col["right"]]].astype(float)
+except KeyError as e:
+    raise SystemExit(
+        f"Missing required columns in {args.file}. Expected columns named "
+        "'top', 'left', and 'right'."
+    )
+except Exception as e:
+    raise SystemExit(f"Error parsing CSV values: {e} in {args.csv}")
 
 # Normalise
 # ternary_sum auto normalises - this is unnecessary
