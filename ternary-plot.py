@@ -133,7 +133,7 @@ output_dir.mkdir(parents=True, exist_ok=True)
 
 output_path = output_dir / filename
 
-plt.savefig(output_path)
+plt.savefig(output_path, bbox_inches="tight")
 print(f"Saved {filename} to {output_path}")
 
 if args.view:
