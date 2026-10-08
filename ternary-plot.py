@@ -14,8 +14,10 @@ if sys.prefix == sys.base_prefix:
 
     if os.name == "nt":  # if windows
         venv_python = venv_dir / "Scripts" / "python.exe"
+        sys.exit(subprocess.call([str(venv_python), str(__file__), *sys.argv[1:]]))
     else:
         venv_python = venv_dir / "bin" / "python"
+        os.execv(str(venv_python), [str(venv_python), str(__file__), *sys.argv[1:]])
 
     os.execv(str(venv_python), [str(venv_python), str(__file__), *sys.argv[1:]])
     sys.exit()
