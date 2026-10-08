@@ -134,8 +134,11 @@ ax.raxis.set_label_rotation_mode("horizontal")
 ax.scatter(top, left, right, s=args.point_size)
 
 # Remove mathtext formatting before saving
-labels = labels.map(clean_string)
-filename = f"{labels.iloc[col['top']]} {labels.iloc[col['left']]} {labels.iloc[col['right']]}.png"
+# Ignore blanks
+labels = labels.fillna('').astype(str).map(clean_string)
+
+# filename = f"{labels.iloc[col['top']]} {labels.iloc[col['left']]} {labels.iloc[col['right']]}.png"
+filename = Path(args.file).stem + ".png"
 
 output_dir = Path("Ternary Figures")
 output_dir.mkdir(parents=True, exist_ok=True)
